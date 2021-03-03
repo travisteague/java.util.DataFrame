@@ -4,11 +4,11 @@ import java.util.ArrayList;
 public class DataFrame {
 	ArrayList<List> table = new ArrayList<List>();
 	ArrayList<String> colnames = new ArrayList<String>();
-	
-	DataFrame(ArrayList<String> colnames, List<Integer>... cols) {
+/////////////////////////////////////////////////////////////////////////////////////////////////
+	DataFrame(ArrayList<String> colnames, Object... cols) {
 		int j = 0; //Counter
-		for(List<Integer> i: cols) {
-			this.table.add(i);
+		for(Object i: cols) {
+			this.table.add((List) i);
 			//Will fail on the first run for j-1 where j = 0
 			try {
 				//Check that each column has same number of rows
@@ -28,14 +28,33 @@ public class DataFrame {
 		}else {
 			this.colnames = colnames;
 		}//end if else
-		
 	}//end DataFrame()
-	
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+	DataFrame(Object... cols) {
+	int j = 0; //Counter
+		for(Object i: cols) {
+				this.table.add((List) i);
+				//Will fail on the first run for j-1 where j = 0
+				try {
+				//Check that each column has same number of rows
+					if(table.get(j).size() != table.get(j-1).size()) {
+						throw new IllegalStateException("Number of rows should be same in all data columns");
+					}//end if
+				}catch(IndexOutOfBoundsException e) {
+					j++;
+					continue;
+				}//end try catch
+				j++;
+		}//end for loop
+	}//end DataFrame()
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
 	//Print the table
 	public void head() {
 		//Print the column names
 		for(String i : colnames) { //for each string in colnames
-			System.out.printf("%s\t", i);
+			System.out.printf("%s\t", i);	
 		}
 		System.out.println("\n");
 		
@@ -54,4 +73,5 @@ public class DataFrame {
 		
 
 	}//end head()
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 }//end class
